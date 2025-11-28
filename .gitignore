@@ -14,7 +14,7 @@ __pycache__/
 *.pyc
 *.pyo
 *.pyd
-*.pkl
+
 *.pickle
 *.sav
 
