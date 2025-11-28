@@ -15,7 +15,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const circle = document.querySelector(".progress");
   const confidenceLabel = document.getElementById("confidenceLabel");
 
-  const API_URL = "http://localhost:8000/predict";
+  const API_URL = "https://phishing-detector-backend-o0la.onrender.com/predict";
+
 
   analyzeBtn.addEventListener("click", async () => {
     const text = emailTextEl.value.trim();
