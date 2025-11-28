@@ -1,0 +1,75 @@
+<!-- frontend/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Phishing Email Detector</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- New font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet"
+  >
+
+  <link rel="stylesheet" href="styles.css" />
+  <script src="script.js" defer></script>
+</head>
+
+<body>
+  <main class="page">
+    <section class="card">
+      <header class="card-header">
+        <h1>Phishing Email Detector</h1>
+        <p class="subtitle">
+          Paste an email and check if it looks suspicious or safe.
+        </p>
+      </header>
+
+      <section class="card-body">
+        <label for="emailText" class="field-label">Email content</label>
+        <textarea
+          id="emailText"
+          class="textarea"
+          rows="10"
+          placeholder="Paste the email text here..."
+        ></textarea>
+
+        <div class="actions">
+          <button id="analyzeBtn" class="btn-primary">Analyze Email</button>
+          <span id="statusText" class="status-text"></span>
+        </div>
+
+        <section id="resultSection" class="result hidden">
+          <div class="result-header">
+            <span id="resultBadge" class="badge">Pending</span>
+
+            <!-- NEW CONFIDENCE CIRCLE -->
+            <div id="confidenceCircle" class="confidence-circle hidden">
+              <svg class="circle-svg" width="65" height="65">
+                <circle class="bg" cx="32" cy="32" r="28"></circle>
+                <circle class="progress" cx="32" cy="32" r="28"></circle>
+              </svg>
+              <div class="confidence-label" id="confidenceLabel">0%</div>
+            </div>
+
+          </div>
+
+          <p id="resultMessage" class="result-message"></p>
+
+          <div id="reasonContainer" class="reason-container hidden">
+            <h3>Why this result?</h3>
+            <ul id="reasonList" class="reason-list"></ul>
+          </div>
+        </section>
+      </section>
+    </section>
+
+    <footer class="footer">
+      <p>Demo only – not a replacement for real security tools.</p>
+    </footer>
+  </main>
+</body>
+</html>
