@@ -10,13 +10,13 @@ document.addEventListener("DOMContentLoaded", () => {
   const reasonContainer = document.getElementById("reasonContainer");
   const reasonList = document.getElementById("reasonList");
 
-  // NEW confidence circle elements
+  // Confidence disk
   const circleContainer = document.getElementById("confidenceCircle");
   const circle = document.querySelector(".progress");
   const confidenceLabel = document.getElementById("confidenceLabel");
 
+  // 👉 Render backend endpoint
   const API_URL = "https://phishing-detector-backend-o0la.onrender.com/predict";
-
 
   analyzeBtn.addEventListener("click", async () => {
     const text = emailTextEl.value.trim();
@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    // Reset UI
+    // Reset UI before each request
     resultSection.classList.add("hidden");
     reasonContainer.classList.add("hidden");
     reasonList.innerHTML = "";
@@ -38,7 +38,8 @@ document.addEventListener("DOMContentLoaded", () => {
       const response = await fetch(API_URL, {
         method: "POST",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
+          "Accept": "application/json"
         },
         body: JSON.stringify({ text })
       });
@@ -48,48 +49,45 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       const data = await response.json();
+
       const label = data.label || "unknown";
       const score = typeof data.score === "number" ? data.score : null;
       const reasons = Array.isArray(data.reasons) ? data.reasons : [];
 
-      // Update badge style
+      // 🔵 --- Badge Styling & Result Message ---
       resultBadge.classList.remove("phishing", "legit");
-      if (label.toLowerCase() === "phishing") {
+
+      if (label === "phishing") {
         resultBadge.textContent = "Phishing";
         resultBadge.classList.add("phishing");
         resultMessage.textContent =
           "This email looks suspicious. Be careful before clicking any links or sharing information.";
-      } else if (label.toLowerCase() === "legit") {
+      } 
+      else if (label === "legit") {
         resultBadge.textContent = "Likely Safe";
         resultBadge.classList.add("legit");
         resultMessage.textContent =
           "This email looks reasonably safe, but always double-check the sender and links.";
-      } else {
+      } 
+      else {
         resultBadge.textContent = "Unknown";
         resultMessage.textContent =
           "The system could not confidently classify this email.";
       }
 
-      // ---------------------------------------------
-      // ✅ NEW CONFIDENCE CIRCLE LOGIC
-      // ---------------------------------------------
+      // 🔵 --- Confidence Disk ---
       if (score !== null) {
         const pct = Math.round(score * 100);
         confidenceLabel.textContent = pct + "%";
-
-        // Show the circle
         circleContainer.classList.remove("hidden");
 
-        // Animation math
         const radius = 28;
         const circumference = 2 * Math.PI * radius;
         const offset = circumference - (pct / 100) * circumference;
 
-        // Apply stroke animation
         circle.style.strokeDasharray = `${circumference}`;
         circle.style.strokeDashoffset = offset;
 
-        // Colors based on percentage
         if (pct < 30) {
           circle.style.stroke = "#16a34a"; // green
         } else if (pct < 70) {
@@ -99,7 +97,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       }
 
-      // Reasons
+      // 🔵 --- Reasons List ---
       if (reasons.length > 0) {
         reasonContainer.classList.remove("hidden");
         reasons.forEach((reason) => {
@@ -109,13 +107,16 @@ document.addEventListener("DOMContentLoaded", () => {
         });
       }
 
+      // Show results
       resultSection.classList.remove("hidden");
       statusText.textContent = "Done.";
-    } catch (err) {
-      console.error(err);
+    } 
+    catch (err) {
+      console.error("Frontend Error:", err);
       statusText.textContent =
-        "Could not analyze the email. Check if the backend is running.";
-    } finally {
+        "Could not analyze the email. The backend may be sleeping (Render Free Tier). Try again in 20 seconds.";
+    } 
+    finally {
       analyzeBtn.disabled = false;
     }
   });
