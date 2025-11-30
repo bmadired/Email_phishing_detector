@@ -8,13 +8,23 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 
+// Auto detect python command
+function getPythonCmd() {
+  return process.platform === "win32" ? "python" : "python3";
+}
+
+// TEST GET route so browser won't show "Cannot GET"
+app.get("/predict", (req, res) => {
+  res.send("Use POST /predict with JSON { text: \"email text\" }");
+});
+
+// MAIN prediction route (POST)
 app.post("/predict", (req, res) => {
   const text = req.body.text || "";
 
-  const python = spawn("python3", ["python/predict.py"], {
-    cwd: path.join(__dirname)
-  });
+  const pythonFile = path.join(__dirname, "python", "predict.py");
 
+  const python = spawn(getPythonCmd(), [pythonFile]);
   let result = "";
 
   python.stdin.write(JSON.stringify({ text }));
@@ -32,15 +42,15 @@ app.post("/predict", (req, res) => {
     try {
       const output = JSON.parse(result);
       res.json(output);
-    } catch (err) {
-      console.error(err);
+    } catch (error) {
+      console.error("JSON error:", error);
       res.status(500).json({ error: "Prediction failed" });
     }
   });
 });
 
 app.get("/", (req, res) => {
-  res.send("Backend is running.");
+  res.send("Backend running.");
 });
 
 const PORT = process.env.PORT || 8000;
