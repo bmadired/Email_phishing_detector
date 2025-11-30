@@ -16,30 +16,30 @@ The frontend is designed with a clean, modern UI.
 
 ## 🌟 Features
 
-✔ Detects phishing vs legit emails\
-✔ Provides confidence percentage\
-✔ Shows suspicious reasons (only for phishing emails)\
-✔ Auto-switches between Localhost and Render backend\
-✔ Clean circular confidence indicator\
-✔ No database required\
+✔ Detects phishing vs legit emails
+✔ Provides confidence percentage
+✔ Shows suspicious reasons (only for phishing emails)
+✔ Auto-switches between Localhost and Render backend
+✔ Clean circular confidence indicator
+✔ No database required
 ✔ Fully deployable on **Render**
 
 ------------------------------------------------------------------------
 
 ## 📁 Project Structure
 
-    phishing-detector/
+    phishing-detector
     │
-    ├── backend/
+    ├── backend
     │   ├── server.js
     │   ├── package.json
     │   ├── runtime.txt
-    │   ├── python/
+    │   ├── python
     │   │   ├── predict.py
     │   │   ├── model.pkl
     │   │   └── vectorizer.pkl
     │
-    └── frontend/
+    └── frontend
         ├── index.html
         ├── style.css
         ├── script.js
@@ -48,21 +48,21 @@ The frontend is designed with a clean, modern UI.
 
 ## 🧠 Machine Learning Workflow
 
-1.  User inputs email text\
+1.  User inputs email text
 
-2.  Frontend sends text to backend via `/predict`\
+2.  Frontend sends text to backend via `/predict`
 
 3.  Node.js spawns Python:
 
         python/predict.py
 
-4.  Python loads ML model and vectorizer\
+4.  Python loads ML model and vectorizer
 
 5.  Python returns:
 
-    -   `label` → phishing / legit\
-    -   `score` → confidence\
-    -   `reasons` → detected warning signs\
+    -   `label` → phishing / legit
+    -   `score` → confidence
+    -   `reasons` → detected warning signs
 
 6.  Frontend displays results beautifully
 
@@ -181,5 +181,5 @@ Backend runs at:
 
 # 👨‍💻 Author
 
-**Bhavana Madireddy**\
-Phishing Email Detection Project\
+**Bhavana Madireddy**
+Phishing Email Detection Project
