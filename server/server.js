@@ -1,47 +1,34 @@
-const express = require("express");
-const cors = require("cors");
-const bodyParser = require("body-parser");
-const { spawn } = require("child_process");
-const path = require("path");
+require('dotenv').config();
+const express = require('express');
+const cors = require('cors');
+const bodyParser = require('body-parser');
+const connectDB = require('./config/database');
+const apiRoutes = require('./routes/api');
 
 const app = express();
+
+// Connect to MongoDB
+connectDB();
+
+// Middleware
 app.use(cors());
 app.use(bodyParser.json());
 
-app.post("/predict", (req, res) => {
-  const text = req.body.text || "";
+// API Routes
+app.use('/api', apiRoutes);
 
-  const python = spawn("python3", ["python/predict.py"], {
-    cwd: path.join(__dirname)
-  });
-
-  let result = "";
-
-  python.stdin.write(JSON.stringify({ text }));
-  python.stdin.end();
-
-  python.stdout.on("data", (data) => {
-    result += data.toString();
-  });
-
-  python.stderr.on("data", (data) => {
-    console.error("Python error:", data.toString());
-  });
-
-  python.on("close", () => {
-    try {
-      const output = JSON.parse(result);
-      res.json(output);
-    } catch (err) {
-      console.error(err);
-      res.status(500).json({ error: "Prediction failed" });
+// Root route
+app.get('/', (req, res) => {
+  res.json({
+    message: 'Phishing Detector API - MERN Stack',
+    endpoints: {
+      predict: 'POST /api/predict',
+      history: 'GET /api/history',
+      deleteOne: 'DELETE /api/history/:id',
+      clearAll: 'DELETE /api/history'
     }
   });
 });
 
-app.get("/", (req, res) => {
-  res.send("Backend is running.");
-});
-
 const PORT = process.env.PORT || 8000;
-app.listen(PORT, () => console.log("Server running on port " + PORT));
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
